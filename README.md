@@ -23,9 +23,10 @@ NOTE: The exam should be based on the sample code.
 
 ### Instructions
 - Should have 2 directories `/` and `/users`
-- Use react-create-app, SCSS or LESS
+- Recommend using react-create-app, SCSS or LESS based project creation.
 - You can showcase your ReactJS coding skills without relying too much on any libraries, toolkits or plugins.
-- Do not use any frameworks, please use the given react app build for you to start. Except for ant design or reactstrap you may use it to make your app look good.
+- Do not use any frameworks, please use the given react app build for you to start. Except for Next.js, bootstrap (reactstrap), MUI you may use it to make your app look good.
+- But we welcome the use of libraries for better design and technology to show your skills. 
 - Please be strict on using coding standards, follow airbnb’s coding style guide (https://github.com/airbnb/javascript)
 - As for writing code and design patterns, if you want to modify or upgrade it's all yours. Show us what you got in terms of coding structure and best practices.
 - There will be API for you to use and make things work on your end, it will be provided down below.
