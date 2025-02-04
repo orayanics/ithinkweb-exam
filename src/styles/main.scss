@@ -26,3 +26,12 @@ body {
 .delete-button:hover {
   background-color: #1c1c1c;
 }
+
+.gradient-text {
+  background: linear-gradient(236deg, #ff4949 0%, #fbae3e 40%, #ee4f4f 100%);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
