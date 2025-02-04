@@ -4,9 +4,9 @@ export const UsersContext = createContext();
 
 export default function UsersProvider({ children }) {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("new");
     getUsers();
   }, []);
 
@@ -16,9 +16,10 @@ export default function UsersProvider({ children }) {
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
-
     const data = await response.json();
     setUsers(data.data);
+
+    setLoading(false);
   };
 
   const addUser = (newUser) => {
@@ -51,7 +52,9 @@ export default function UsersProvider({ children }) {
   };
 
   return (
-    <UsersContext.Provider value={{ users, addUser, editUser, deleteUser }}>
+    <UsersContext.Provider
+      value={{ users, loading, setLoading, addUser, editUser, deleteUser }}
+    >
       {children}
     </UsersContext.Provider>
   );

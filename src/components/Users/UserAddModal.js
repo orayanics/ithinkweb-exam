@@ -12,10 +12,10 @@ import {
   Label,
   Input,
   Alert,
+  FormText,
 } from "reactstrap";
 
 import { UsersContext } from "../../util/UsersProvider";
-
 function UserAddModal() {
   const { addUser } = useContext(UsersContext);
   const history = useHistory();
@@ -120,7 +120,7 @@ function UserAddModal() {
 
   return (
     <>
-      <Modal isOpen={true}>
+      <Modal isOpen={true} centered>
         <ModalHeader toggle={toggle}>Add User</ModalHeader>
         <ModalBody>
           {isAlertOpen && (
@@ -131,7 +131,9 @@ function UserAddModal() {
           <Form>
             {/* Email */}
             <FormGroup>
-              <Label for="email">Email</Label>
+              <Label for="email" className="fw-bold">
+                Email <span className="text-danger">*</span>
+              </Label>
               <Input
                 type="email"
                 name="email"
@@ -144,11 +146,16 @@ function UserAddModal() {
               <FormFeedback invalid>
                 Please enter a valid email address.
               </FormFeedback>
+              <FormText>
+                Enter a valid email address. This can be changed later on.
+              </FormText>
             </FormGroup>
 
             {/* First Name */}
             <FormGroup>
-              <Label for="firstName">First Name</Label>
+              <Label for="firstName" className="fw-bold">
+                First Name <span className="text-danger">*</span>
+              </Label>
               <Input
                 type="text"
                 name="firstName"
@@ -161,11 +168,17 @@ function UserAddModal() {
               <FormFeedback invalid>
                 Only letters are allowed in this field.
               </FormFeedback>
+              <FormText>
+                This is the name that will be displayed on your profile and in
+                emails.
+              </FormText>
             </FormGroup>
 
             {/* Last Name */}
             <FormGroup>
-              <Label for="lastName">Last Name</Label>
+              <Label for="lastName" className="fw-bold">
+                Last Name <span className="text-danger">*</span>
+              </Label>
               <Input
                 type="text"
                 name="lastName"
@@ -178,19 +191,24 @@ function UserAddModal() {
               <FormFeedback invalid>
                 Only letters are allowed in this field.
               </FormFeedback>
+              <FormText>
+                This is the name that will be displayed on your profile and in
+                emails.
+              </FormText>
             </FormGroup>
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="success"
+          <button
+            className="edit-button rounded"
             type="submit"
             onClick={(e) => handleOnSubmit(e)}
           >
             Submit
-          </Button>{" "}
-          <Button
-            color="danger"
+          </button>
+
+          <button
+            className="delete-button rounded"
             onClick={() => {
               toggle();
               // clear form data
@@ -207,7 +225,7 @@ function UserAddModal() {
             }}
           >
             Cancel
-          </Button>
+          </button>
         </ModalFooter>
       </Modal>
     </>

@@ -1,14 +1,17 @@
 import "styles/main.scss";
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { Page } from "components/Pages";
 import Home from "views/home";
 import Users from "views/users";
+import NotFound from "views/notfound";
 
 import UserEditModal from "components/Users/UserEditModal";
 import UserAddModal from "components/Users/UserAddModal";
 import UserDeleteModal from "components/Users/UserDeleteModal";
+
+import Loader from "views/loader";
 
 import UsersProvider from "util/UsersProvider";
 function App() {
@@ -35,10 +38,14 @@ function ModalSwitch() {
           </Route>
 
           <Route path="/users">
-            <Users />
+            <Suspense fallback={<Loader />}>
+              <Users />
+            </Suspense>
           </Route>
 
-          <Route path="*">404</Route>
+          <Route path="*">
+            <NotFound />
+          </Route>
         </Switch>
 
         {background && <Route path="/users/create" component={UserAddModal} />}

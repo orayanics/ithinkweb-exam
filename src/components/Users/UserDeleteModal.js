@@ -15,6 +15,9 @@ import {
   Label,
   Input,
   Alert,
+  FormText,
+  Col,
+  Row,
 } from "reactstrap";
 
 import { UsersContext } from "../../util/UsersProvider";
@@ -65,7 +68,7 @@ function UserDeleteModal() {
 
   return (
     <>
-      <Modal isOpen={true}>
+      <Modal isOpen={true} centered>
         <ModalHeader toggle={toggle}>Delete User</ModalHeader>
         <ModalBody>
           {isAlertOpen && (
@@ -73,67 +76,88 @@ function UserDeleteModal() {
               Please check your inputs for any errors.
             </Alert>
           )}
+
+          <FormText>
+            Are you sure you want to delete this user? This action cannot be
+            undone.
+          </FormText>
           <Form>
             {/* Email */}
             <img
               src={formData.avatar}
               alt={`${formData.firstName} ${formData.lastName}`}
+              className="avatar-icon rounded-circle mx-auto d-block"
             />
             <FormGroup>
-              <Label for="email">Email</Label>
+              <Label for="email" className="fw-bold">
+                Email
+              </Label>
               <Input
                 type="email"
                 name="email"
                 placeholder="youremail@address.com"
                 value={formData.email}
                 readOnly
+                disabled
               />
               <FormFeedback invalid>
                 Please enter a valid email address.
               </FormFeedback>
             </FormGroup>
 
-            {/* First Name */}
-            <FormGroup>
-              <Label for="firstName">First Name</Label>
-              <Input
-                type="text"
-                name="firstName"
-                placeholder="Juan"
-                value={formData.firstName}
-                readOnly
-              />
-              <FormFeedback invalid>
-                Only letters are allowed in this field.
-              </FormFeedback>
-            </FormGroup>
+            <Row>
+              <Col>
+                {/* First Name */}
+                <FormGroup>
+                  <Label for="firstName" className="fw-bold">
+                    First Name
+                  </Label>
+                  <Input
+                    type="text"
+                    name="firstName"
+                    placeholder="Juan"
+                    value={formData.firstName}
+                    readOnly
+                    disabled
+                  />
+                  <FormFeedback invalid>
+                    Only letters are allowed in this field.
+                  </FormFeedback>
+                </FormGroup>
+              </Col>
 
-            {/* Last Name */}
-            <FormGroup>
-              <Label for="lastName">Last Name</Label>
-              <Input
-                type="text"
-                name="lastName"
-                placeholder="Dela Cruz"
-                value={formData.lastName}
-                readOnly
-              />
-              <FormFeedback invalid>
-                Only letters are allowed in this field.
-              </FormFeedback>
-            </FormGroup>
+              <Col>
+                {/* Last Name */}
+                <FormGroup>
+                  <Label for="lastName" className="fw-bold">
+                    Last Name
+                  </Label>
+                  <Input
+                    type="text"
+                    name="lastName"
+                    placeholder="Dela Cruz"
+                    value={formData.lastName}
+                    readOnly
+                    disabled
+                  />
+                  <FormFeedback invalid>
+                    Only letters are allowed in this field.
+                  </FormFeedback>
+                </FormGroup>
+              </Col>
+            </Row>
           </Form>
         </ModalBody>
         <ModalFooter>
-          <Button
-            color="success"
+          <button
+            className="edit-button rounded"
             type="submit"
             onClick={(e) => handleOnSubmit(e)}
           >
             Submit
-          </Button>{" "}
-          <Button
-            color="danger"
+          </button>
+          <button
+            className="delete-button rounded"
             onClick={() => {
               toggle();
               // clear form data
@@ -146,7 +170,7 @@ function UserDeleteModal() {
             }}
           >
             Cancel
-          </Button>
+          </button>
         </ModalFooter>
       </Modal>
     </>
