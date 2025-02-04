@@ -1,50 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Container, Table, Button } from "reactstrap";
 import { Link, useLocation } from "react-router-dom";
 
-import UserAddModal from "../../components/Users/UserAddModal";
-import UserEditModal from "components/Users/UserEditModal";
+import { UsersContext } from "../../util/UsersProvider";
 
 function Index() {
-  const [users, setUsers] = useState({ data: [], page: 1, total_pages: 1 });
-  const [selectedUser, setSelectedUser] = useState([]);
+  const { users } = useContext(UsersContext);
   const location = useLocation();
 
-  const getUsers = async (currentPage = 1, addUser = null, editUser = null) => {
-    const response = await fetch(
-      `https://reqres.in/api/users?page=${currentPage}&per_page=10`
-    );
-    const data = await response.json();
-    if (addUser) {
-      data.data.push(addUser);
-    }
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginatedUsers, setPaginatedUsers] = useState([]);
 
     if (editUser) {
-      data.data = data.data.map((user) =>
-        user.id === editUser.id ? { ...user, ...editUser } : user
-      );
-    }
+  const perPage = 10;
 
-    setUsers(data);
+  const paginateUsers = (page) => {
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+    const paginatedData = users.slice(start, end);
+    setPaginatedUsers(paginatedData);
+  };
+
+  const handlePageTurn = () => {
+    if (currentPage * perPage < users.length) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   useEffect(() => {
-    getUsers();
-  }, []);
-
-  const handlePageTurn = (number) => {
-    const newPage = users.page + number;
-    if (newPage < 1 || newPage > users.total_pages) {
-      return;
-    }
-    getUsers(newPage);
-  };
+    paginateUsers(currentPage);
+  }, [currentPage, users]);
 
   return (
     <Container>
       <div className="mt-3 text-right">
         <Link
-          to="/users/create"
+          to={{
+            pathname: `/users/create`,
+            state: { background: location },
+          }}
           style={{ color: "white", textDecoration: "none" }}
         >
           <Button color="primary">+ Add User</Button>
@@ -57,17 +54,6 @@ function Index() {
           + Back
         </Button>
       </div>
-
-      {location.pathname === "/users/create" && (
-        <UserAddModal onUserAdd={(newUser) => getUsers(users.page, newUser)} />
-      )}
-
-      {location.pathname.match(/^\/users\/\d+\/edit$/) && (
-        <UserEditModal
-          userData={selectedUser}
-          onEditUser={(editedUser) => getUsers(users.page, null, editedUser)}
-        />
-      )}
 
       <Table className="mt-3">
         <thead>
@@ -82,7 +68,7 @@ function Index() {
         </thead>
 
         <tbody>
-          {users.data.map((user) => (
+          {paginatedUsers.map((user) => (
             <tr key={user.id}>
               <th scope="row">{user.id}</th>
               <td>
@@ -94,14 +80,24 @@ function Index() {
               <td>
                 <div>
                   <Link
-                    to={`/users/${user.id}/edit`}
+                    to={{
+                      pathname: `/users/${user.id}/edit`,
+                      state: { background: location },
+                    }}
                     style={{ color: "white", textDecoration: "none" }}
                   >
-                    <Button color="info" onClick={() => setSelectedUser(user)}>
-                      Edit
-                    </Button>
+                    <Button color="info">Edit</Button>
                   </Link>
-                  <Button color="danger">Delete</Button>
+
+                  <Link
+                    to={{
+                      pathname: `/users/${user.id}/delete`,
+                      state: { background: location },
+                    }}
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <Button color="danger">Delete</Button>
+                  </Link>
                 </div>
               </td>
             </tr>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import {
   Button,
@@ -14,7 +14,10 @@ import {
   Alert,
 } from "reactstrap";
 
-function UserAddModal({ onUserAdd }) {
+import { UsersContext } from "../../util/UsersProvider";
+
+function UserAddModal() {
+  const { addUser } = useContext(UsersContext);
   const history = useHistory();
 
   const toggle = () => {
@@ -103,15 +106,15 @@ function UserAddModal({ onUserAdd }) {
 
     const result = await response.json();
 
-    // lift up user to parent
     const newUser = {
-      id: result.id,
+      id: parseInt(result.id),
       email: formData.email,
       first_name: formData.firstName,
       last_name: formData.lastName,
       avatar: `https://ui-avatars.com/api/?name=${formData.firstName}+${formData.lastName}`,
     };
-    onUserAdd(newUser);
+
+    addUser(newUser);
     toggle();
   };
 

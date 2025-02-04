@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import {
+  useHistory,
+  useParams,
+} from "react-router-dom/cjs/react-router-dom.min";
 import {
   Button,
   Modal,
@@ -16,24 +19,21 @@ import {
 
 import { UsersContext } from "../../util/UsersProvider";
 
-function UserEditModal() {
+function UserDeleteModal() {
   const history = useHistory();
   const { id } = useParams();
-  const { users, editUser } = useContext(UsersContext);
-
-  const [isEmailValid, setIsEmailValid] = useState(null);
-  const [isFirstNameValid, setIsFirstNameValid] = useState(null);
-  const [isLastNameValid, setIsLastNameValid] = useState(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const { users, deleteUser } = useContext(UsersContext);
 
   const toggle = () => {
     history.push("/users");
   };
 
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
   useEffect(() => {
     getUserById(id).then((data) => {
       setFormData({
+        avatar: data.avatar,
         email: data.email,
         firstName: data.first_name,
         lastName: data.last_name,
@@ -57,93 +57,16 @@ function UserEditModal() {
     firstName: "",
     lastName: "",
   });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!value || !emailRegex.test(value)) {
-        setIsEmailValid(false);
-      } else {
-        setIsEmailValid(true);
-      }
-    }
-
-    if (name === "firstName" || name === "lastName") {
-      const nameRegex = /^[a-zA-Z]+$/;
-      if (!value || !nameRegex.test(value)) {
-        if (name === "firstName") {
-          setIsFirstNameValid(false);
-        }
-        if (name === "lastName") {
-          setIsLastNameValid(false);
-        }
-      } else {
-        if (name === "firstName") {
-          setIsFirstNameValid(true);
-        }
-        if (name === "lastName") {
-          setIsLastNameValid(true);
-        }
-      }
-    }
-    setFormData({ ...formData, [name]: value });
-  };
-
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-
-    // if invalid fields
-    if (
-      isEmailValid === false ||
-      isFirstNameValid === false ||
-      isLastNameValid === false
-    ) {
-      setIsAlertOpen(true);
-      return;
-    }
-
-    // if empty fields
-    if (!formData.email || !formData.firstName || !formData.lastName) {
-      setIsEmailValid(false);
-      setIsFirstNameValid(false);
-      setIsLastNameValid(false);
-      setIsAlertOpen(true);
-      return;
-    }
-
-    setIsAlertOpen(false);
-    // send data to server
-    const response = await fetch(`https://reqres.in/api/users/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: formData.firstName + " " + formData.lastName,
-      }),
-    });
-
-    const result = await response.json();
-
-    // lift up edited user to parent
-    const editedUser = {
-      id: parseInt(id),
-      email: formData.email,
-      first_name: formData.firstName,
-      last_name: formData.lastName,
-    };
-
-    editUser(editedUser);
+    deleteUser(parseInt(id));
     toggle();
   };
 
   return (
     <>
       <Modal isOpen={true}>
-        <ModalHeader toggle={toggle}>Edit User</ModalHeader>
+        <ModalHeader toggle={toggle}>Delete User</ModalHeader>
         <ModalBody>
           {isAlertOpen && (
             <Alert color="danger">
@@ -152,6 +75,10 @@ function UserEditModal() {
           )}
           <Form>
             {/* Email */}
+            <img
+              src={formData.avatar}
+              alt={`${formData.firstName} ${formData.lastName}`}
+            />
             <FormGroup>
               <Label for="email">Email</Label>
               <Input
@@ -159,9 +86,7 @@ function UserEditModal() {
                 name="email"
                 placeholder="youremail@address.com"
                 value={formData.email}
-                onChange={handleChange}
-                valid={isSubmitted && isEmailValid}
-                invalid={isSubmitted && isEmailValid === false}
+                readOnly
               />
               <FormFeedback invalid>
                 Please enter a valid email address.
@@ -176,9 +101,7 @@ function UserEditModal() {
                 name="firstName"
                 placeholder="Juan"
                 value={formData.firstName}
-                onChange={handleChange}
-                valid={isSubmitted && isFirstNameValid}
-                invalid={isSubmitted && isFirstNameValid === false}
+                readOnly
               />
               <FormFeedback invalid>
                 Only letters are allowed in this field.
@@ -193,9 +116,7 @@ function UserEditModal() {
                 name="lastName"
                 placeholder="Dela Cruz"
                 value={formData.lastName}
-                onChange={handleChange}
-                valid={isSubmitted && isLastNameValid}
-                invalid={isSubmitted && isLastNameValid === false}
+                readOnly
               />
               <FormFeedback invalid>
                 Only letters are allowed in this field.
@@ -221,10 +142,6 @@ function UserEditModal() {
               formData.lastName = null;
 
               // clear form validation
-              setIsEmailValid(null);
-              setIsFirstNameValid(null);
-              setIsLastNameValid(null);
-              setIsSubmitted(false);
               setIsAlertOpen(false);
             }}
           >
@@ -236,4 +153,4 @@ function UserEditModal() {
   );
 }
 
-export default UserEditModal;
+export default UserDeleteModal;
