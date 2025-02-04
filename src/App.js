@@ -10,6 +10,7 @@ import NotFound from "views/notfound";
 import UserEditModal from "components/Users/UserEditModal";
 import UserAddModal from "components/Users/UserAddModal";
 import UserDeleteModal from "components/Users/UserDeleteModal";
+import UserProfile from "components/Users/UserProfile";
 
 import Loader from "views/loader";
 
@@ -57,6 +58,8 @@ function ModalSwitch() {
         {background && (
           <Route path="/users/:id/delete" component={UserDeleteModal} />
         )}
+
+        {background && <Route path="/users/:id" component={UserProfile} />}
       </Page>
     </div>
   );

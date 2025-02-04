@@ -83,11 +83,18 @@ function Index() {
                     {user.id}
                   </th>
                   <td className="align-middle">
-                    <img
-                      className={`${styles["avatar-icon"]} rounded-circle`}
-                      src={user.avatar}
-                      alt={user.first_name}
-                    />
+                    <Link
+                      to={{
+                        pathname: `/users/${user.id}`,
+                        state: { background: location },
+                      }}
+                    >
+                      <img
+                        className={`${styles["avatar-icon"]} rounded-circle`}
+                        src={user.avatar}
+                        alt={user.first_name}
+                      />
+                    </Link>
                   </td>
                   <td className="align-middle">{user.email}</td>
                   <td className="align-middle">{user.first_name}</td>
