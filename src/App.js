@@ -59,7 +59,9 @@ function ModalSwitch() {
           <Route path="/users/:id/delete" component={UserDeleteModal} />
         )}
 
-        {background && <Route path="/users/:id" component={UserProfile} />}
+        {background && (
+          <Route path="/users/:id/profile" component={UserProfile} />
+        )}
       </Page>
     </div>
   );

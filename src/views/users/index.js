@@ -85,7 +85,7 @@ function Index() {
                   <td className="align-middle">
                     <Link
                       to={{
-                        pathname: `/users/${user.id}`,
+                        pathname: `/users/${user.id}/profile`,
                         state: { background: location },
                       }}
                     >
